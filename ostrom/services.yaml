@@ -1,0 +1,15 @@
+# Describes the format for available ostrom services
+
+get_token:
+  description: get new login ostrom token and sets ostrom.token.
+  fields:
+    api_key64:
+      required: true
+      description: the key from ostrom in base64 format
+get_price:    
+  description: get forcast grid price
+  fields:
+    token:
+      required: true
+      description: aktueller token
+    
