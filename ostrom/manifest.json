@@ -2,5 +2,7 @@
   "domain": "ostrom",
   "name": "ostrom api",
   "version": "0.1.0",
-  "loggers": ["ostrom"]
+  "loggers": ["ostrom"],
+  "documentation": "https://github.com/melmager/ha_ostrom",
+  "codeowners": ["@melmager"]
 }
