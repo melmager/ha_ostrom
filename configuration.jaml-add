@@ -1,0 +1,6 @@
+# add to your confiuration.yaml file
+# and restart
+# ostrom_login64key ist a unused dummy entry
+
+ostrom:
+  ostrom_login64key : "test64key"
