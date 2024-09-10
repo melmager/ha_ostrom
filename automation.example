@@ -18,5 +18,5 @@ action:
           token: "{{ states('ostrom.token') }}"
           start_offset: -1
           end_offset: 24
-          my_zip: "35789"
+          my_zip: "60000"
 mode: single
