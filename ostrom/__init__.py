@@ -70,8 +70,10 @@ def setup(hass, config):
         exlist=[]
         for ix in erg['data']:
             exlist.append(round(float(ix[tax])+float(ix[kwprice]),2))
-        jerglist = json.dumps(exlist)    
-        hass.states.set("ostrom.price", jerglist)
+        jerglist = json.dumps(exlist)   
+        raw_data = {'raw':erg}
+        hass.states.set("ostrom.price", jerglist,raw_data)
+        
         
     def handle_custom(call):
         """Handle the service action call."""
