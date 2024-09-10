@@ -81,6 +81,8 @@ Beispiel Raw Daten von Ostrom für eine Stunde:
   ]
 }
 ```
+
 Bekannte Bugs, die wegen Beginner Status noch nicht lösen kann
 
 - kein Eintrag im Logfile
+- api_key64: !secret base64key !secret ist leider nicht möglich
