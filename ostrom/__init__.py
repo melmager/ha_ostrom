@@ -44,18 +44,22 @@ def setup(hass, config):
         auth = json.loads(response.text)
         token = auth['token_type']+" "+auth['access_token']
         hass.states.set("ostrom.token", token, expire_attr)
-        _LOGGER.info("daten bekommen " + token)
+        #_LOGGER.info("daten bekommen " + token)
         
     def handle_price(call):
         """Handle the service action call."""
         #token = hass.states.get("ostrom.token")
         token = call.data.get('token')
+        myzip = call.data.get('my_zip')
+        _LOGGER.warning(call.data.get('start_offset'))
         tax="grossKwhTaxAndLevies"
         kwprice="grossKwhPrice"
-        myzip = "35789"
+        # myzip = "35789"
+        offstart = int(call.data.get('start_offset'))
+        offend = int(call.data.get('end_offset'))
         timeformat="%Y-%m-%dT%H:00:00.000Z"
-        now = datetime.datetime.utcnow().strftime(timeformat)
-        future = (datetime.datetime.utcnow() + datetime.timedelta(hours=24)).strftime(timeformat)
+        now = (datetime.datetime.utcnow() + datetime.timedelta(hours=offstart)).strftime(timeformat) 
+        future = (datetime.datetime.utcnow() + datetime.timedelta(hours=offend)).strftime(timeformat)
         url = "https://production.ostrom-api.io/spot-prices?startDate="+now+"&endDate=" + future + "&resolution=HOUR&zip="+ myzip
         headers = {
           "accept": "application/json",
@@ -66,12 +70,26 @@ def setup(hass, config):
         exlist=[]
         for ix in erg['data']:
             exlist.append(round(float(ix[tax])+float(ix[kwprice]),2))
-        hass.states.set("ostrom.price", exlist)
+        jerglist = json.dumps(exlist)    
+        hass.states.set("ostrom.price", jerglist)
         
+    def handle_custom(call):
+        """Handle the service action call."""
+        token = call.data.get('token')
+        url = "https://production.ostrom-api.io/contracts"
+        headers = {
+          "accept": "application/json",
+          "authorization": token
+        }
+        response = requests.get(url, headers=headers)
+        hass.states.set("ostrom_contract_data",erg)
+ 
         
     hass.services.register(DOMAIN, "get_token", handle_token)
     hass.services.register(DOMAIN, "get_price", handle_price)
+    hass.services.register(DOMAIN, "get_customer", handle_custom)
         
 
     # Return boolean to indicate that initialization was successful.
     return True
+  
