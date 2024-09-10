@@ -57,8 +57,12 @@ Die Raw Daten von Ostom werden drastisch gekürzt da es eine maximal Grosse gibt
 Ergebnis ist eine List und jeder Wert ist eine addition von grossKwhPrice + grossKwhTaxAndLevies
 Sprich Brutto
 Strompreis plus Brutto Steuern und Netzabgabe
+Ergebniss:
+```
+[29.68, 27.9, 23.14, 17.14, 16.01, 16.0, 15.99, 16.0, 16.03, 18.6, 25.57, 27.06, 25.91, 25.77, 25.12, 23.67]
+```
 
-Raw Daten von Ostrom für eine Stunde:
+Beispiel Raw Daten von Ostrom für eine Stunde:
 
 ```
 { "data": [
