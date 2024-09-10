@@ -1,5 +1,7 @@
 # Describes the format for available ostrom services
 
+# Describes the format for available ostrom services
+
 get_token:
   description: get new login ostrom token and sets ostrom.token.
   fields:
@@ -12,4 +14,22 @@ get_price:
     token:
       required: true
       description: aktueller token
+    my_zip: 
+      required: true
+      description: deine Postleitzahl
+    start_offset:
+      required: true
+      description: Hour Start offset
+      default: -1
+    end_offset:
+      required: true
+      description: Hour Stopp offset
+      default: 24
+get_customer:
+  description: get Customer Data
+  fields:
+    token:
+      required: true
+      description: aktueller token
+
     
