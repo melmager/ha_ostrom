@@ -4,5 +4,7 @@
   "version": "0.1.0",
   "loggers": ["ostrom"],
   "documentation": "https://github.com/melmager/ha_ostrom",
-  "codeowners": ["@melmager"]
+  "codeowners": ["@melmager"],
+  "integration_type": "service",
+  "iot_class": "cloud_polling"
 }
