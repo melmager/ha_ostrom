@@ -18,13 +18,13 @@ get_price:
       required: true
       description: deine Postleitzahl
     start_offset:
-      required: true
+      required: false
       description: Hour Start offset
-      default: -1
+      default: 0
     end_offset:
-      required: true
+      required: false
       description: Hour Stopp offset
-      default: 24
+      default: 36
 get_customer:
   description: get Customer Data
   fields:
