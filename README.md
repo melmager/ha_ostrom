@@ -24,43 +24,54 @@ für den Zugriff auf Daten wird ein zugangstoken benötigt, der nur eine gewisse
 ```
 action: ostrom.get_token
 data: 
-  api_key64: base64key
+  api_key64: >-
+     ihr_base64key_fuer_ostrom_zugang
 ```
-als ergebnis wird ein states erzeugt mit attribute expire, das zur zeit nirgends ausgewertet wird, aus dem Grund 
-ist es sinnvoll ein sequence zu erstellen die immer mit get_token startet und im Anschluss die Price Daten abfragt
-Siehe Beispiel 
+als ergebnis wird ein states erzeugt mit angabe Zeitpunkt expire und einem state.attribute token das bei weiteren abfragen benutzt werden muss
+, expire wird derzeit von mir nicht ausgewertet - ist auf der to do liste :-)
+es ist sinnvoll ein sequence zu erstellen die immer mit get_token startet und im Anschluss die Price Daten abfragt
+in Entwicklung / template
 ```
-{{ states('ostrom.token') }}
+Ablauf {{ states('ostrom.token') }}
+Zugangstoken {{ state_attr('ostrom.token','token') }}
+
 ```
-Die Strompreise können maximal 24 Stunden in der Zukunft abgefragt werden - aller dings erhält man nicht immer 24 ergebnisse
-das liegt daran das immer zur Mittagszeit die forecast Preise für den nächsten Tag ausgehandelt werden.
-Also Mittags gibt es mehr Daten wie Morgens :-)
+Abfrage der Price daten
+
+  token: muss der token übergeben werden von der Abfrage get_token
+  start_offset:0 = startzeitpunkt der abfrage - hier aktuelle Stunde (wird wohl ein fester Wert 0 werden)
+  end_offset: 36 = endzeitpunkt - Ergebnismenge ist abhängig vom Abfragezeitpunkt 
+  Ostrom liefert immer pricedaten bis 23:00 Uhr (test mit sommerzeit)
+  Mittags ab 14:00 Uhr gibt es die Daten für den nächsten Tag (sommerzeit) bis dahin nur aktueller Tag
+Also hat man bei Abfrage Morgens nur die Price daten bis 23:00 Uhr des Tages. 
+
+
 ```
-action: ostrom.get_price
-data:
-  token: "{{ states('ostrom.token') }}"
-  start_offset: -1
-  end_offset: 24
-  my_zip: "60000"
+- action: ostrom.get_price
+        metadata: {}
+        data:
+          token: "{{ state_attr('ostrom.token','token') }}"
+          start_offset: 0
+          end_offset: 36
+          my_zip: "60000"
 ```
+
+my_zip: "ihre postleitzahl" - ist ein muss - ohne gibt es keine preisdaten !
+
 start_offset - Startzeitpunkt = Aktuelle Stunde + start_offset 
--1 damit man noch den Preis von vergangener Stunde hat und damit die Möglichkeit hat mit dem Stromverbrauch der letzten 
-Stunde die Kosten zu berrechnen
+0  Preis von aktueller Stunde
 
-end_offset: wie weit in die Zukunft - max 24 Stunden - ergebinsmenge abhängig von der Abfrage Uhrzeit (siehe Erklärung oben)
-my_zip: deine Postleitzahl, ist zwingend sonst keine Preisdaten !
-```
-{{ states('ostrom.price') }}
-```
+end_offset: wie weit in die Zukunft - max 36 Stunden - ergebinsmenge abhängig von der Abfrage Uhrzeit (siehe Erklärung oben)
 
-Die Raw Daten von Ostom werden drastisch gekürzt da es eine maximal Grosse gibt von 255 zeichen für den erzeugten state
-Ergebnis ist eine List und jeder Wert ist eine addition von grossKwhPrice + grossKwhTaxAndLevies
-Sprich Brutto
-Strompreis plus Brutto Steuern und Netzabgabe
-Ergebniss:
 ```
-[29.68, 27.9, 23.14, 17.14, 16.01, 16.0, 15.99, 16.0, 16.03, 18.6, 25.57, 27.06, 25.91, 25.77, 25.12, 23.67]
+Aktueller Preis {{ states('ostrom.price') }}
+Raw Daten die Ostrom liefert {{ state_attr('ostrom.price','raw') }}
+Durchschnitts Preis {{ state_attr('ostrom.price','average') }}
+Gekürztes Ergebnis für Datenquelle Apexchart {{ state_attr('ostrom.price','apex') }}
+Günstigster Strompreis Zeitpunkt {{ state_attr('ostrom.price','low') }}
+
 ```
+Strompreis ergibt sich Aus bruttostrom plus brutto Strompreis "grossKwhPrice" plus Brutto Steuern und Netzabgabe "grossKwhTaxAndLevies"
 
 Beispiel Raw Daten von Ostrom für eine Stunde:
 
@@ -85,4 +96,4 @@ Beispiel Raw Daten von Ostrom für eine Stunde:
 Bekannte Bugs, die wegen Beginner Status noch nicht lösen kann
 
 - kein Eintrag im Logfile
-- api_key64: !secret base64key !secret ist leider nicht möglich
+- api_key64: !secret base64key !secret ist leider nicht möglich der Key muss noch dem get_token übergeben werden
