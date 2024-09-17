@@ -56,12 +56,9 @@ Also hat man bei Abfrage Morgens nur die Price daten bis 23:00 Uhr des Tages.
           my_zip: "60000"
 ```
 
-my_zip: "ihre postleitzahl" - ist ein muss - ohne gibt es keine preisdaten !
-
-start_offset - Startzeitpunkt = Aktuelle Stunde + start_offset 
-0  Preis von aktueller Stunde
-
-end_offset: wie weit in die Zukunft - max 36 Stunden - ergebinsmenge abhängig von der Abfrage Uhrzeit (siehe Erklärung oben)
+  my_zip: "ihre postleitzahl" - ist ein muss - ohne gibt es keine preisdaten !
+  start_offset: Startzeitpunkt = 0  = Aktuelle Stunde 
+  end_offset: wie weit in die Zukunft - max 36 Stunden - ergebinsmenge abhängig von der Abfrage Uhrzeit (siehe Erklärung oben)
 
 ```
 Aktueller Preis {{ states('ostrom.price') }}
@@ -71,7 +68,7 @@ Gekürztes Ergebnis für Datenquelle Apexchart {{ state_attr('ostrom.price','ape
 Günstigster Strompreis Zeitpunkt {{ state_attr('ostrom.price','low') }}
 
 ```
-Strompreis ergibt sich Aus bruttostrom plus brutto Strompreis "grossKwhPrice" plus Brutto Steuern und Netzabgabe "grossKwhTaxAndLevies"
+übermittelter Strompreis ergibt sich aus Brutto Strompreis "grossKwhPrice" plus Brutto Steuern und Netzabgabe "grossKwhTaxAndLevies"
 
 Beispiel Raw Daten von Ostrom für eine Stunde:
 
