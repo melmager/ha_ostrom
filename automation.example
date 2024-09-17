@@ -15,7 +15,7 @@ action:
       - action: ostrom.get_price
         metadata: {}
         data:
-          token: "{{ states('ostrom.token') }}"
+          token: "{{ state_attr('ostrom.token','token') }}"
           start_offset: -1
           end_offset: 24
           my_zip: "60000"
