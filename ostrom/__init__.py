@@ -31,7 +31,7 @@ def setup(hass, config):
     def handle_token(call):
         """Handle the service action call."""
         usrpwd64 = call.data.get('api_key64')
-        future = datetime.datetime.now() + datetime.timedelta(seconds = 3500)
+        future = str(datetime.datetime.now() + datetime.timedelta(seconds = 3500))
         expire_attr = {'expire':future}
         url = "https://auth.production.ostrom-api.io/oauth2/token"
         payload = { "grant_type": "client_credentials" }
@@ -43,8 +43,9 @@ def setup(hass, config):
         response = requests.post(url, data=payload, headers=headers)
         auth = json.loads(response.text)
         token = auth['token_type']+" "+auth['access_token']
-        hass.states.set("ostrom.token", token, expire_attr)
-        #_LOGGER.info("daten bekommen " + token)
+        jsontoken = {'token':token}
+        hass.states.set("ostrom.token", future , jsontoken )
+        _LOGGER.info('Get token')
         
     def handle_price(call):
         """Handle the service action call."""
@@ -55,8 +56,10 @@ def setup(hass, config):
         tax="grossKwhTaxAndLevies"
         kwprice="grossKwhPrice"
         # myzip = "35789"
-        offstart = int(call.data.get('start_offset'))
-        offend = int(call.data.get('end_offset'))
+        #offstart = int(call.data.get('start_offset'))
+        offstart = 0
+        #offend = int(call.data.get('end_offset'))
+        offend= 36
         timeformat="%Y-%m-%dT%H:00:00.000Z"
         now = (datetime.datetime.utcnow() + datetime.timedelta(hours=offstart)).strftime(timeformat) 
         future = (datetime.datetime.utcnow() + datetime.timedelta(hours=offend)).strftime(timeformat)
@@ -68,12 +71,20 @@ def setup(hass, config):
         response = requests.get(url, headers=headers)
         erg = json.loads(response.text)
         exlist=[]
+        japex=[]
         for ix in erg['data']:
             exlist.append(round(float(ix[tax])+float(ix[kwprice]),2))
-        jerglist = json.dumps(exlist)   
-        raw_data = {'raw':erg}
-        hass.states.set("ostrom.price", jerglist,raw_data)
-        
+            jd = { 'date':ix['date'] }
+            jr = round(float(ix[tax])+float(ix[kwprice]),2)
+            jd["price"] = str(jr)
+            japex.append(jd)
+        jerglist = json.dumps(exlist) 
+        avg = round((sum(exlist)/len(exlist)),2)
+        pricelow =  japex[exlist.index(min(exlist))]['date']   
+        nowprice = exlist[0]
+        raw_data = {'raw':erg["data"],'average':avg,'apex':japex,'low':pricelow}
+        #hass.states.set("ostrom.price", jerglist,raw_data)
+        hass.states.set("ostrom.price", nowprice,raw_data)
         
     def handle_custom(call):
         """Handle the service action call."""
@@ -85,6 +96,9 @@ def setup(hass, config):
         }
         response = requests.get(url, headers=headers)
         hass.states.set("ostrom_contract_data",erg)
+        
+    def handle_delay(call):
+        """Handle the service action call."""
  
         
     hass.services.register(DOMAIN, "get_token", handle_token)
