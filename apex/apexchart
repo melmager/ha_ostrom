@@ -1,0 +1,22 @@
+type: custom:apexcharts-card
+graph_span: 36h
+span:
+  start: hour
+  offset: +0h
+now:
+  show: true
+  label: Jetzt
+all_series_config:
+  unit: cent
+header:
+  show: true
+  show_states: true
+  colorize_states: true
+  title: Preis Forecast
+series:
+  - entity: ostrom.price
+    data_generator: |
+      return entity.attributes.raw.map((start, index) => {
+        return [new Date(start["date"]).getTime(), (entity.attributes.raw[index]["grossKwhPrice"] + entity.attributes.raw[index]["grossKwhTaxAndLevies"])];
+      });
+    extend_to: false
