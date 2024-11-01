@@ -20,7 +20,7 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
          headers = {
            "accept": "application/json",
            "content-type": "application/x-www-form-urlencoded",
-           "authorization": "Basic " + self._data['base64_key']
+           "authorization": "Basic " + data['apikey']
          }
          response = await requests.post(url, data=payload, headers=headers)
          ok = (response.status_code  == requests.codes.created)
