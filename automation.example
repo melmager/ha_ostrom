@@ -7,16 +7,5 @@ trigger:
 condition: []
 action:
   - sequence:
-      - action: ostrom.get_token
-        metadata: {}
-        data:
-          api_key64: >-
-            your_base64_api_key
       - action: ostrom.get_price
-        metadata: {}
-        data:
-          token: "{{ state_attr('ostrom.token','token') }}"
-          start_offset: -1
-          end_offset: 24
-          my_zip: "60000"
 mode: single
