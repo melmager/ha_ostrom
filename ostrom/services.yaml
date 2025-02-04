@@ -1,35 +1,9 @@
 # Describes the format for available ostrom services
 
-# Describes the format for available ostrom services
-
-get_token:
-  description: get new login ostrom token and sets ostrom.token.
-  fields:
-    api_key64:
-      required: true
-      description: the key from ostrom in base64 format
 get_price:    
+  name: Price_Data
   description: get forcast grid price
-  fields:
-    token:
-      required: true
-      description: aktueller token
-    my_zip: 
-      required: true
-      description: deine Postleitzahl
-    start_offset:
-      required: false
-      description: Hour Start offset
-      default: 0
-    end_offset:
-      required: false
-      description: Hour Stopp offset
-      default: 36
-get_customer:
-  description: get Customer Data
-  fields:
-    token:
-      required: true
-      description: aktueller token
-
+get_power:
+  name: Grid_Power
+  description: get power use
     
