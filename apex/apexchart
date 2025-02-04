@@ -16,7 +16,7 @@ header:
 series:
   - entity: ostrom.price
     data_generator: |
-      return entity.attributes.raw.map((start, index) => {
-        return [new Date(start["date"]).getTime(), (entity.attributes.raw[index]["grossKwhPrice"] + entity.attributes.raw[index]["grossKwhTaxAndLevies"])];
+      return entity.attributes.data.map((start, index) => {
+        return [new Date(start["date"]).getTime(), (entity.attributes.data[index]["price"])];
       });
     extend_to: false
