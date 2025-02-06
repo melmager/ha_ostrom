@@ -6,4 +6,12 @@ get_price:
 get_power:
   name: Grid_Power
   description: get power use
-    
+  fields:
+    days_back:
+      required: false
+      default: 2 
+      description: days back full daydata
+get_cost:
+  name: Hour_cost
+  description: get power and Pice for one Hour in past
+
