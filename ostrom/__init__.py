@@ -12,6 +12,7 @@ import logging
 import requests
 import json
 import base64
+import math
 from .ostrom_api import *
 
 DOMAIN = "ostrom"
@@ -36,19 +37,33 @@ async def async_setup(hass, config):
         #erg = ostrom_price(hass.data[DOMAIN]["outh"]["token"],hass.data["contract"]["zip"],now)
         erg = await hass.async_add_executor_job(ostrom_ha_price,hass.data[DOMAIN])
         hass.states.async_set("ostrom.price", erg["data"][0]["price"],erg)
-        #hass.states.set("ostrom.price", erg["data"][0]["price"],config[DOMAIN])
+       
         
     async def handle_pwr_relation(call):
-        #tage = int(call.data.get('days_back'))
+        tage = 2
+        if (call.data.get('days_back') != None): 
+            tage = int(call.data.get('days_back'))
+        #hass.states.async_set("ostrom.token","test",call.data)
         #erg = {'data': [{'date': '2025-01-31T00:00:00.000Z', 'kWh': 0.531}, {'date': '2025-01-31T01:00:00.000Z', 'kWh': 0.556}]}
         erg = await hass.async_add_executor_job(ostrom_ha_power,hass.data[DOMAIN])
-        hass.states.async_set("ostrom.grid",erg["daysum"],{"daten":erg})
+        hass.states.async_set("ostrom.grid",erg["daysum"],erg)
+        
+    async def handle_day_cost(call): 
+        past = (datetime.datetime.utcnow() - datetime.timedelta(days=2))   
+        
+        erg = await hass.async_add_executor_job(ostrom_ha_cost, hass.data[DOMAIN])
+        #pay =  (float(erg["price_data"]["price"]) * float(erg["consum_data"]["kWh"]) / 100)
+        pay = round(erg["consum_data"]["kWh"] * erg["price_data"]["price"] / 100,5)
+        hass.states.async_set("ostrom.cost",pay,erg)
         
     hass.services.async_register(DOMAIN, "get_price", handle_price_forecast)  
     hass.services.async_register(DOMAIN, "get_power", handle_pwr_relation)
+    hass.services.async_register(DOMAIN, "get_cost", handle_day_cost)
+    
         
         
     # Return boolean to indicate that initialization was successful.
     return True
+    
     
     
