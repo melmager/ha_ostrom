@@ -1,7 +1,0 @@
-Homeassistant Helper for create base64 login
-ausführen in HA Entwicklungswerkzeuge / Vorlage
-
-
-{{ ("your ostrom user"+":"+"your ostrom pass") | base64_encode}}
-
-ergebnis ist der Zugang für die Software
