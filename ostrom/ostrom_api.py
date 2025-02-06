@@ -122,7 +122,6 @@ def ostrom_consum(mytoken,cid, daypast=2):
 
 #hass[DOMAIN]
 def ostrom_ha_price(domaindata):
-    
     valid = (domaindata["outh"]["expire"] > datetime.datetime.utcnow())
     if valid == False:
         domaindata["outh"] = ostrom_outh(domaindata["apikey"])
@@ -136,8 +135,19 @@ def ostrom_ha_power(domaindata):
     daten = ostrom_consum(domaindata["outh"]["token"],domaindata["contract"]["cid"],2)  
     return daten
     
-        
+def ostrom_ha_cost(domaindata):
+    timeformat = "%Y-%m-%dT%H:00:00.000Z"
+    valid = (domaindata["outh"]["expire"] > datetime.datetime.utcnow())
+    if valid == False:
+        domaindata["outh"] = ostrom_outh(domaindata["apikey"])
+    past = (datetime.datetime.utcnow() - datetime.timedelta(days=2))   
+    daten = {}
+    #einstunde 48 stunden zurück - price data
+    dp = ostrom_price(domaindata["outh"]["token"],domaindata["contract"]["zip"],past,1)
+    daten["price_data"] = dp["data"][0]
+    con =  ostrom_consum(domaindata["outh"]["token"],domaindata["contract"]["cid"],2)  
+    dinx = past.hour
+    daten["consum_data"] = con["data"][dinx]
+    return daten
     
-        
-        
 
