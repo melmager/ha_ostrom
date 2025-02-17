@@ -1,9 +1,9 @@
 # ha_ostrom
 Integration Ostrom in to Home Assistant
 
-only Playground!
+Beta Version!
 Beginner Level Programming for Homeassistant#
-Version 2.1
+Version 2.2
 
 
 Path in Home Assistant 
@@ -26,9 +26,24 @@ ostrom:
   apiuser: "ostrom_user_id"
   apipass: "ostrom_secret"
 ```
+optionale Angaben:
+```
+
+  price_now: "name"	Erzeugt sensor.name als state_class: total, unit_of_measurement: EUR/kWh, device_class: monetary
+			Aktueller Strompreis in EUR; wird von Recorder verarbeitet und landet in der History von HA
+			ohne angabe der Option kein Sensor.
+  supply_past: "Verbrauchszähler kWh Name"
+			Erzeugt ein Sensor der den Stromverbrauch aufzählt, allerdings um 2 Tage verzögert :-(
+                        state_class: total, unit_of_measurement: EUR, device_class: monetary, imsys_date: datum der messung
+			Vorraussetzung IMSYS liefert Daten
+  price_past: "Kostenzähler EUR Name"
+			Erzeugt ein Sensor der die Kosten aufzählt (Bezug in kWh * Strompreis kWh/EUR zu dem Zeitpunkt)
+   			state_class: total, unit_of_measurement: EUR, device_class: monetary, imsys_date: DateTime
+			auch hier IMSYS Datenlieferung vorraussetzung
+```
 
 
- es werden 3 services erzeugt 
+ es werden 4 services erzeugt 
 -   ostrom.get_price
 	```
 	Abfrage von Forcast Preisen maximal 36 Stunden in die Zukunft,
@@ -38,13 +53,8 @@ ostrom:
 	attribute:
 	average: durchschnittspreis in cent von den gelieferten  Daten
 	low: 
-		date: '2025-02-04T12:00:00.000Z'
-		price: 29.33
-		
- 	low["date"] Uhrzeit vom nidrigsten Preis  
- 	low["price"] der preis in cent zu dem zeitpunkt
-
- 
+		date: 'Zeitpunkt des günstigsten Strompreises'
+		price: 'der dann gültige Preis in Cent' 
 	data: liste von forcast preisen jeweils mit
   		date "datum/uhrzeit"
   		price "centpreis zu dem zeitpunkt"
@@ -63,7 +73,7 @@ ostrom:
 	sind die Werte erst mit verzögerung abrufbar, darum die 2 tage in die
 	Vergangenheit
 	mögliche Auswertungen für HA - unklar, da Sensordaten nur mit aktueller
-	Zeit angelegt werden können.
+	Zeit angelegt werden können. Sensordaten In Vergangenheit anlegen gab es mal ein Request zu - wird nicht umgesetzt.
 	
 	erzeugt ostrom.grid
 		gesamt Verbrauch vom Tag ab 00:00 Uhr
@@ -75,7 +85,6 @@ ostrom:
 	```
 
 -	ostrom_cost
-	+	ohne Option
 	
 	```
 	Liefert Daten von aktueller Stunde 2 Tage in Vergangenheit
@@ -84,12 +93,19 @@ ostrom:
 		Attribute:
 			price_data
 				date		Datum/Uhrzeit 
-				price	Strompres in Cent
+				price		Strompres in Cent
 			consum_data
 				date		Datum/Uhrzeit
-				kWh		Strombezug 
+				kWh		Strombezug
+ 
 		
 	```
-	
-Aktuell erforsche ich Möglichkeiten mit den Kostendaten etwas sinnvolles anfangen zu können.	
+-	reset_meter
+		Setzt Kostenzähler und Verbrauchszähler auf Null - nett für Monatsberechnung
+ 		ansonsten für Mehr in HACS gibts den "energy_meter" der kann als Tarifeingang ein Sensor nutzen.
+ 		Der von HA kann nur feste Tarife - für Dynamische Tarife unbrauchbar.
+ 	
+Aktuell teste ich die Software - aber kann man mit arbeiten (finde ich) :-).	
+Falls einer noch kein Ostrom Kunde ist unter Promo.text 
+ist mein Promocode den man bei Neuvertrag angeben kann.
 	
