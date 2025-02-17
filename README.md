@@ -35,11 +35,12 @@ optionale Angaben:
   supply_past: "Verbrauchszähler kWh Name"
 			Erzeugt ein Sensor der den Stromverbrauch aufzählt, allerdings um 2 Tage verzögert :-(
                         state_class: total, unit_of_measurement: EUR, device_class: monetary, imsys_date: datum der messung
-			Vorraussetzung IMSYS liefert Daten
+			Vorraussetzung IMSYS liefert Daten und Service - service ostrom.get_cost muss Stündlich Aufgerufen werden
+
   price_past: "Kostenzähler EUR Name"
 			Erzeugt ein Sensor der die Kosten aufzählt (Bezug in kWh * Strompreis kWh/EUR zu dem Zeitpunkt)
    			state_class: total, unit_of_measurement: EUR, device_class: monetary, imsys_date: DateTime
-			auch hier IMSYS Datenlieferung vorraussetzung
+			auch hier IMSYS Datenlieferung vorraussetzung; service ostrom.get_cost muss Stündlich Aufgerufen werden
 ```
 
 
@@ -48,7 +49,7 @@ optionale Angaben:
 	```
 	Abfrage von Forcast Preisen maximal 36 Stunden in die Zukunft,
 	Normal gibt es neue Daten nachmittags um 14 oder 15 Uhr
-	Aufruf ohne Optionen
+	Aufruf ohne Optionen - muss Stündliche aufgerufen werden
 	im states ostrom.price was von der Api angelegt wird, Aktueller Strompreis in Cent
 	attribute:
 	average: durchschnittspreis in cent von den gelieferten  Daten
