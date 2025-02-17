@@ -14,4 +14,8 @@ get_power:
 get_cost:
   name: Hour_cost
   description: get power and Pice for one Hour in past
+reset_meter:
+  name: Reset_meter
+  description: reset Cost and Power to zero
+  
 
