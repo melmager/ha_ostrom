@@ -1,0 +1,40 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Add Ostrom developer productive Access",
+                "description": "https://developer.ostrom-api.io/auth/login",
+                "data": {
+                    "apiuser": "ostrom user key",
+                    "apipass": "ostrom password key"
+                }
+            }
+        },
+        "error" : {
+            "cannot_connect": "api access error"
+        },
+        "abort": {
+            "already_configured": "The entity combination is already configured"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Optional sensor Output",
+                "description": "If Name given a sensor.name ist created",
+                "data": {
+                    "Sensor_PriceNow": "Actual Grid Price",
+                    "Counter_price": "Meter Cost",
+                    "Counter_kWh": "Meter Energy"
+                    
+                },
+                "data_description": {
+                    "Sensor_PriceNow": "Power price in EUR/kWh",
+                    "Counter_price": "Energy Cost Incement Counter",
+                    "Counter_kWh": "Energy from Grid Increment Counter"
+                }
+            }
+        }
+    }
+}
+
