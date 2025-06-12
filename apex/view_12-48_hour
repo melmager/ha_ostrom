@@ -1,0 +1,28 @@
+type: custom:apexcharts-card
+graph_span: 48h
+span:
+  start: hour
+  offset: "-12h"
+now:
+  show: true
+  label: Jetzt
+all_series_config:
+  unit: cent
+header:
+  show: true
+  show_states: true
+  colorize_states: true
+  title: Preis Forecast
+series:
+  - entity: ostrom.price
+    data_generator: |
+      return entity.attributes.data.map((start, index) => {
+        return [new Date(start["date"]).getTime(), (entity.attributes.data[index]["price"])];
+      });
+    extend_to: false
+    show:
+      legend_value: false
+      in_header: false
+    name: ostrom_forecast
+  - entity: ostrom.price
+    extend_to: now
