@@ -6,7 +6,7 @@ from typing import Any
 from homeassistant import data_entry_flow
 
 from homeassistant import config_entries, exceptions
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 
 import voluptuous as vol
 #from functools import partial
