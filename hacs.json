@@ -1,5 +1,7 @@
 {
-    "hacs": "1.6.0",
-    "name": "Ostrom",
-    "homeassistant": "2022.4.5"
+  "name": "Ostrom",
+  "content_in_root": false,
+  "domain": "ostrom",
+  "homeassistant": "2023.0.0",
+  "render_readme": true 
 }
