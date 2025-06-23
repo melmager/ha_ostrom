@@ -7,6 +7,7 @@ from homeassistant import data_entry_flow
 
 from homeassistant import config_entries, exceptions
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers import config_validation as cv
 
 import voluptuous as vol
 #from functools import partial
@@ -19,10 +20,10 @@ _LOGGER = logging.getLogger(__name__)
 
 DOMAIN = "ostrom"
 
-DATA_SCHEMA = vol.Schema(
+CONFIG_SCHEMA = vol.Schema(
     {
-        vol.Required("apiuser"): str,
-        vol.Required("apipass"): str
+        vol.Required("apiuser"): cv.str,
+        vol.Required("apipass"): cv.str
         
     })
 
