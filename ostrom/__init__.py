@@ -5,6 +5,9 @@ from __future__ import annotations
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
+import voluptuous as vol
+from homeassistant.const import CONF_HOST, CONF_PORT
+
 #from homeassistant.util.json import JsonObjectType as json
 import asyncio
 import datetime
@@ -20,6 +23,21 @@ DOMAIN = "ostrom"
 CONF_TOPIC = 'ostrom_login setup'
 
 _LOGGER = logging.getLogger(__name__)
+
+CONFIG_SCHEMA = vol.Schema(
+    {
+        DOMAIN: vol.Schema(
+            {
+                vol.Required(CONF_APIUSER): str,
+                vol.Required(CONF_APIPASS): str,
+                vol.Optional(CONF_PRICE_NOW): str,
+                vol.Optional(CONF_SUPPLY_PAST): str,
+                vol.OPTIONAL(CONF_PRICE_PAST):str
+            }
+        )
+    },
+    extra=vol.ALLOW_EXTRA,
+)
 
 #myapi = ostrom_api.Ostrom_api()
 
