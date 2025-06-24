@@ -7,6 +7,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
 import voluptuous as vol
 from homeassistant.const import CONF_HOST, CONF_PORT
+import homeassistant.helpers.config_validation as cv
 
 #from homeassistant.util.json import JsonObjectType as json
 import asyncio
@@ -24,20 +25,8 @@ CONF_TOPIC = 'ostrom_login setup'
 
 _LOGGER = logging.getLogger(__name__)
 
-CONFIG_SCHEMA = vol.Schema(
-    {
-        DOMAIN: vol.Schema(
-            {
-                vol.Required(CONF_APIUSER): str,
-                vol.Required(CONF_APIPASS): str,
-                vol.Optional(CONF_PRICE_NOW): str,
-                vol.Optional(CONF_SUPPLY_PAST): str,
-                vol.OPTIONAL(CONF_PRICE_PAST):str
-            }
-        )
-    },
-    extra=vol.ALLOW_EXTRA,
-)
+CONFIG_SCHEMA = cv.empty_config_schema(DOMAIN)
+
 
 #myapi = ostrom_api.Ostrom_api()
 
