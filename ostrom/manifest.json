@@ -2,7 +2,7 @@
   "domain": "ostrom",
   "name": "ostrom api",
   "codeowners": ["@melmager"],
-  "config_flow": false,
+  "config_flow": true,
   "documentation": "https://github.com/melmager/ha_ostrom/",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/melmager/ha_ostrom/issues",
