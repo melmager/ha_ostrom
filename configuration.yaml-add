@@ -1,6 +1,16 @@
 # add to your confiuration.yaml file
 # and restart
 
-ostrom:
-  apiuser: "you_user_id"
-  apipass: "password"
+# bei verson 0.3.x unnötig !
+#ostrom:
+#  apiuser: "you_user_id"
+#  apipass: "password"
+
+#https://github.com/zeronounours/HA-custom-component-energy-meter
+energy_meter:
+  monthly_energie:
+    source: sensor.grid
+    name: Monats Energie
+    cycle: monthly_energie
+    source_type: from_grid
+    price_entity: sensor.ostrom_price_now
