@@ -3,7 +3,7 @@ Integration Ostrom in to Home Assistant
 
 Beta Version!
 Beginner Level Programming for Homeassistant#
-Version 2.2
+Version 3.0
 
 
 Path in Home Assistant 
@@ -20,31 +20,10 @@ dort hat man die Wahl zwischen Sandbox und Production - meine Software arbeitet 
 
 Beim Anlegen erhält man eine Client ID und erzeugt dann ein Secret - beides wird benötigt
 
-eintrag in configuration.yaml
-```
-ostrom:
-  apiuser: "ostrom_user_id"
-  apipass: "ostrom_secret"
-```
-optionale Angaben:
-```
-
-  price_now: "name"	Erzeugt sensor.name als state_class: total, unit_of_measurement: EUR/kWh, device_class: monetary
-			Aktueller Strompreis in EUR; wird von Recorder verarbeitet und landet in der History von HA
-			ohne angabe der Option kein Sensor.
-  supply_past: "Verbrauchszähler kWh Name"
-			Erzeugt ein Sensor der den Stromverbrauch aufzählt, allerdings um 2 Tage verzögert :-(
-                        state_class: total, unit_of_measurement: EUR, device_class: monetary, imsys_date: datum der messung
-			Vorraussetzung IMSYS liefert Daten und Service - service ostrom.get_cost muss Stündlich Aufgerufen werden
-
-  price_past: "Kostenzähler EUR Name"
-			Erzeugt ein Sensor der die Kosten aufzählt (Bezug in kWh * Strompreis kWh/EUR zu dem Zeitpunkt)
-   			state_class: total, unit_of_measurement: EUR, device_class: monetary, imsys_date: DateTime
-			auch hier IMSYS Datenlieferung vorraussetzung; service ostrom.get_cost muss Stündlich Aufgerufen werden
-```
+Setup geht via GUI 
 
 
- es werden 4 services erzeugt 
+ es wird 1 services erzeugt 
 -   ostrom.get_price
 	```
 	Abfrage von Forcast Preisen maximal 36 Stunden in die Zukunft,
@@ -61,52 +40,59 @@ optionale Angaben:
   		price "centpreis zu dem zeitpunkt"
 	
 	```
-	+	nachfolgende Services bemötigen ein Smartmeter mit ImSys 
-	+	Datenübertragung - In der App muss ein Stundenverbrauch angezeigt
-	+	werden - sonst liegen keine Daten vor und es gibt ein Abfragefehler
-	
--   ostrom.get_power
+zusätzlich wird ein sensor.ostrom_price_now angelegt der den Strompreis in EUR/kWh liefert.
+```
+state_class: total
+unit_of_measurement: EUR/kWh
+device_class: monetary
+```
 
-	+ 	days_back
-		* 	Optonal - Default ist 2 
-	```
-	Liefert den Stromverbrauch der vom Zähler übermittelt wurde - leider 
-	sind die Werte erst mit verzögerung abrufbar, darum die 2 tage in die
-	Vergangenheit
-	mögliche Auswertungen für HA - unklar, da Sensordaten nur mit aktueller
-	Zeit angelegt werden können. Sensordaten In Vergangenheit anlegen gab es mal ein Request zu - wird nicht umgesetzt.
-	
-	erzeugt ostrom.grid
-		gesamt Verbrauch vom Tag ab 00:00 Uhr
-		attribute
-			Data		Stundenweise Liste
-				date		datum/uhrzeit
-				kWh		erfasster Stromverbrauch
-				
-	```
+Damit sollte man den
+https://github.com/zeronounours/HA-custom-component-energy-meter
+ansteuern können, der braucht allerdings Ein Zähler im Zählerschrank der den Aktuellen Verbrauch erfasst - 
 
--	ostrom_cost
-	
-	```
-	Liefert Daten von aktueller Stunde 2 Tage in Vergangenheit
-	erzeugt ostrom.cost
-		berechnete Stromkosten der Stunde in Euro
-		Attribute:
-			price_data
-				date		Datum/Uhrzeit 
-				price		Strompres in Cent
-			consum_data
-				date		Datum/Uhrzeit
-				kWh		Strombezug
- 
-		
-	```
--	reset_meter
-		Setzt Kostenzähler und Verbrauchszähler auf Null - nett für Monatsberechnung
- 		ansonsten für Mehr in HACS gibts den "energy_meter" der kann als Tarifeingang ein Sensor nutzen.
- 		Der von HA kann nur feste Tarife - für Dynamische Tarife unbrauchbar.
- 	
-Aktuell teste ich die Software - aber kann man mit arbeiten (finde ich) :-).	
+Den in alter Version vorhandenen sensor der Kosten und Verbrauch erfasst hat wurde rausgeworfen. Leider liegen die Verbrauchsdaten vom Smartmeter nur mit eine Verzögerung von 2 tagen bei Ostrom vor und Homeassistant kann nicht mit alten Sensorwerten arbeiten. Das verwirrt mehr wie es hilft das zwischen sensor erstellungszeit und den gespeicherten Verbrauchswerten 48 Stunden differenz sind.
+
+für die Darstellung sollte man 
+https://github.com/RomRider/apexcharts-card
+nutzen
+```
+type: custom:apexcharts-card
+graph_span: 48h
+span:
+  start: hour
+  offset: "-12h"
+now:
+  show: true
+  label: Jetzt
+all_series_config:
+  unit: cent
+header:
+  show: true
+  show_states: true
+  colorize_states: true
+  title: Preis Forecast
+series:
+  - entity: ostrom.price
+    data_generator: |
+      return entity.attributes.data.map((start, index) => {
+        return [new Date(start["date"]).getTime(), (entity.attributes.data[index]["price"])];
+      });
+    extend_to: false
+    show:
+      legend_value: false
+      in_header: false
+    name: ostrom_forecast
+  - entity: ostrom.price
+    extend_to: now
+
+```
+
+die version gefällt mir am besten :-)
+
+
+
+
 Falls einer noch kein Ostrom Kunde ist unter Promo.text 
 ist mein Promocode den man bei Neuvertrag angeben kann.
 	
