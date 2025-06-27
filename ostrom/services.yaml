@@ -11,11 +11,4 @@ get_power:
       required: false
       default: 2 
       description: days back full daydata
-get_cost:
-  name: Hour_cost
-  description: get power and Pice for one Hour in past
-reset_meter:
-  name: Reset_meter
-  description: reset Cost and Power to zero
-  
 
