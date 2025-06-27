@@ -6,6 +6,7 @@
   "documentation": "https://github.com/melmager/ha_ostrom/",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/melmager/ha_ostrom/issues",
-  "requirements": ["requests"]
+  "requirements": ["requests"],
+  "version": "0.3.0"
 }
 
