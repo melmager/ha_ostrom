@@ -17,9 +17,11 @@ import json
 import base64
 import math
 from .ostrom_api import *
+from homeassistant.helpers import config_validation as cv
 
 DOMAIN = "ostrom"
 PLATFORMS = [Platform.SENSOR]
+CONFIG_SCHEMA = cv.empty_config_schema(DOMAIN)
 
 CONF_TOPIC = 'ostrom_login setup'
 
