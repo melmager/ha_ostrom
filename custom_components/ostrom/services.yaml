@@ -1,0 +1,13 @@
+# Describes the format for available ostrom services
+
+get_price:    
+  name: Price_Data
+  description: get forcast grid price
+get_power:
+  name: Grid_Power
+  description: get power use
+  fields:
+    days_back:
+      required: false
+      default: 2 
+      description: days back full daydata
