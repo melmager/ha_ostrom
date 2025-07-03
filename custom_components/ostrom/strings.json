@@ -1,0 +1,20 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Add Ostrom developer productive Access",
+                "description": "https://developer.ostrom-api.io/auth/login",
+                "data": {
+                    "apiuser": "ostrom user key",
+                    "apipass": "ostrom password key"
+                }
+            }
+        },
+        "error" : {
+            "invalid": "fehler"
+        },
+        "abort": {
+            "already_configured": "The entity combination is already configured"
+        }
+    }
+}
