@@ -1,6 +1,5 @@
 {
   "name": "Ostrom",
-  "content_in_root": false,
   "domain": "ostrom",
   "homeassistant": "2023.0.0",
   "render_readme": true 
