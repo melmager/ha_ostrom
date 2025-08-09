@@ -119,9 +119,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     #hass.data[DOMAIN][entry.entry_id] = entry.data
     hass.data[DOMAIN] = await hass.async_add_executor_job(ostrom_ha_setup ,entry.data["apiuser"],entry.data["apipass"])
         # Forward the setup to the sensor platform.
-    await hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(entry, "sensor")
-    )
+    #await hass.async_create_task(
+    #    hass.config_entries.async_forward_entry_setup(entry, "sensor")
+    #)
     return True
 
 
