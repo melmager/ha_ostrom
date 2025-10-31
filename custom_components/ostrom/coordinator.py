@@ -34,6 +34,10 @@ class OstromCoordinator(DataUpdateCoordinator):
         self._drop_raw_data = False
         self.last_update_error: str | None = None
 
+    def _should_preserve_data(self) -> bool:
+        """Check if we should preserve old data instead of failing completely."""
+        return self.data is not None and self._error_count < MAX_ERROR_COUNT
+
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch data from Ostrom API."""
         # Handle simulate_error for testing
@@ -74,7 +78,7 @@ class OstromCoordinator(DataUpdateCoordinator):
                 raise ConfigEntryAuthFailed(f"Authentication failed: {err.as_sensor_text()}") from err
             
             # For other errors, decide whether to keep old data or fail completely
-            if self.data is not None and self._error_count < MAX_ERROR_COUNT:
+            if self._should_preserve_data():
                 # Keep existing data for a few failures
                 _LOGGER.warning(
                     "Keeping previous data after error (attempt %d/%d)",
@@ -92,7 +96,7 @@ class OstromCoordinator(DataUpdateCoordinator):
             
             _LOGGER.exception("Unexpected error fetching Ostrom data: %s", err)
             
-            if self.data is not None and self._error_count < MAX_ERROR_COUNT:
+            if self._should_preserve_data():
                 _LOGGER.warning(
                     "Keeping previous data after unexpected error (attempt %d/%d)",
                     self._error_count, MAX_ERROR_COUNT

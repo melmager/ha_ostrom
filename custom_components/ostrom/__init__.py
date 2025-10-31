@@ -56,8 +56,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     )
     
     # Get ZIP and contract ID if available
-    if "zip" in entry.data:
-        api.set_zip_cid(entry.data.get("zip", "00000"), entry.data.get("contract_id", "0"))
+    if "zip" in entry.data and "contract_id" in entry.data:
+        api.set_zip_cid(entry.data["zip"], entry.data["contract_id"])
     
     # Create coordinator
     coordinator = OstromCoordinator(hass, api)

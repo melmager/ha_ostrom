@@ -13,7 +13,6 @@ from homeassistant.components.sensor import (
     SensorDeviceClass,
 )
 from homeassistant.components.binary_sensor import BinarySensorEntity
-from homeassistant.const import UnitOfEnergy
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .coordinator import OstromCoordinator
