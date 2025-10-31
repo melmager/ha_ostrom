@@ -32,8 +32,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     # Legacy setup - create API and coordinator
     api = OstromApi(
         config[DOMAIN]["apiuser"],
-        config[DOMAIN]["apipass"],
-        hass.loop
+        config[DOMAIN]["apipass"]
     )
     
     coordinator = OstromCoordinator(hass, api)
@@ -53,8 +52,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Create API instance
     api = OstromApi(
         entry.data["apiuser"],
-        entry.data["apipass"],
-        hass.loop
+        entry.data["apipass"]
     )
     
     # Get ZIP and contract ID if available

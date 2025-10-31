@@ -44,13 +44,12 @@ class APIRequestError(Exception):
 
 
 class OstromApi:
-    def __init__(self, user: str, pwd: str, haloop) -> None:
+    def __init__(self, user: str, pwd: str) -> None:
         """Initialise."""
         self.user = user
         self.pwd = pwd
         self.zip = "00000"
         self.cid = "0"
-        self.loop = haloop
         self.expire = datetime.datetime.utcnow()
         self.token = None
         auth_key_str = user + ":" + pwd

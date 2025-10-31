@@ -13,6 +13,9 @@ from .ostrom_api import OstromApi, APIRequestError
 
 _LOGGER = logging.getLogger(__name__)
 
+# Maximum number of consecutive errors before failing completely
+MAX_ERROR_COUNT = 3
+
 
 class OstromCoordinator(DataUpdateCoordinator):
     """Class to manage fetching Ostrom data."""
@@ -71,11 +74,11 @@ class OstromCoordinator(DataUpdateCoordinator):
                 raise ConfigEntryAuthFailed(f"Authentication failed: {err.as_sensor_text()}") from err
             
             # For other errors, decide whether to keep old data or fail completely
-            if self.data is not None and self._error_count < 3:
+            if self.data is not None and self._error_count < MAX_ERROR_COUNT:
                 # Keep existing data for a few failures
                 _LOGGER.warning(
-                    "Keeping previous data after error (attempt %d/3)",
-                    self._error_count
+                    "Keeping previous data after error (attempt %d/%d)",
+                    self._error_count, MAX_ERROR_COUNT
                 )
                 return self.data
             else:
@@ -89,10 +92,10 @@ class OstromCoordinator(DataUpdateCoordinator):
             
             _LOGGER.exception("Unexpected error fetching Ostrom data: %s", err)
             
-            if self.data is not None and self._error_count < 3:
+            if self.data is not None and self._error_count < MAX_ERROR_COUNT:
                 _LOGGER.warning(
-                    "Keeping previous data after unexpected error (attempt %d/3)",
-                    self._error_count
+                    "Keeping previous data after unexpected error (attempt %d/%d)",
+                    self._error_count, MAX_ERROR_COUNT
                 )
                 return self.data
             else:

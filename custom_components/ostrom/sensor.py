@@ -21,6 +21,9 @@ from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
+# Default fallback price when no data is available (EUR/kWh)
+FALLBACK_PRICE_EUR_KWH = 0.30
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -60,20 +63,20 @@ class OstromPriceNowSensor(CoordinatorEntity, SensorEntity):
         if self.coordinator.data is None:
             # No data available - return fallback
             _LOGGER.debug("No coordinator data, using fallback price")
-            return 0.30  # Default fallback price in EUR/kWh
+            return FALLBACK_PRICE_EUR_KWH
         
         try:
             data_list = self.coordinator.data.get("data", [])
             if not data_list:
                 _LOGGER.warning("Coordinator data has no price entries, using fallback")
-                return 0.30
+                return FALLBACK_PRICE_EUR_KWH
             
             # First entry is current hour price in cents/kWh, convert to EUR/kWh
-            price_cents = float(data_list[0].get("price", 30.0))
+            price_cents = float(data_list[0].get("price", FALLBACK_PRICE_EUR_KWH * 100))
             return round(price_cents / 100.0, 4)
         except (KeyError, IndexError, ValueError, TypeError) as err:
             _LOGGER.error("Error extracting price: %s, using fallback", err)
-            return 0.30
+            return FALLBACK_PRICE_EUR_KWH
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
