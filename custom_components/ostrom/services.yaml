@@ -1,15 +1,13 @@
 # Describes the format for available ostrom services
 
-ostrom_apitest_error:
-  name: API Test Error
-  description: Simuliere einen API-Fehler für Testzwecke
+get_price:    
+  name: Price_Data
+  description: get forcast grid price
+get_power:
+  name: Grid_Power
+  description: get power use
   fields:
-    simulate_error:
-      required: true
-      selector:
-        boolean:
-    clear_last_data:
+    days_back:
       required: false
-      default: false
-      selector:
-        boolean:
+      default: 2 
+      description: days back full daydata
