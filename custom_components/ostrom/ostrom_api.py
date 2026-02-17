@@ -170,6 +170,7 @@ class OstromApi:
 
                     japex["average"] = round(japex["average"] / len(japex["data"]), 2)
                     japex["price_source"] = "ostrom"
+                    #japex["BaseFee"] = data_list[0]["grossMonthlyOstromBaseFee"]
                     return japex
         except asyncio.TimeoutError:
             _LOGGER.error("Timeout during Ostrom API Get Price")
